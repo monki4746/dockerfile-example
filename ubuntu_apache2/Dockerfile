@@ -1,15 +1,8 @@
-# Base image
 FROM ubuntu:focal
-
-# Install Apache2
-RUN apt-get update 
-	&& apt-get install -y apache2
-
-# Copy Apache2 configuration
-COPY ubuntu_apache2/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
-
-# Expose port 80
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+    && apt-get install -y apache2
+RUN git clone https://github.com/monki4746/static-web-template.git
+RUN cp -r static-web-template/* /var/www/html/
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
 EXPOSE 80
-
-# Start Apache2 service
-CMD ["apachectl", "-D", "FOREGROUND"]
